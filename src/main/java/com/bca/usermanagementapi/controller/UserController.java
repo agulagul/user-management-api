@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -115,8 +114,8 @@ public class UserController {
         }
     }
 
-    @PutMapping
-    public ResponseEntity<Response<User>> updateUser(@Valid @RequestBody User user, Errors errors){
+    @PutMapping("/{id}")
+    public ResponseEntity<Response<User>> updateUser(@PathVariable("id") Long id, @Valid @RequestBody User user, Errors errors){
         Response<User> response = new Response<>();
 
         try {
@@ -129,12 +128,24 @@ public class UserController {
                 response.setPayload(null);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
-    
-            response.setStatus(StatusCode.OK);
-            response.getMessages().add("Update success");
-            response.setPayload(userService.saveUser(user));
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-            
+
+            User foundUser = userService.getUserById(id);
+            if(user == null){
+                response.setStatus(StatusCode.NOT_FOUND);
+                response.getMessages().add("There is no user");
+                response.setPayload(null);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            } else {
+                foundUser.setUsername(user.getUsername());
+                foundUser.setFullname(user.getFullname());
+                foundUser.setEmail(user.getEmail());
+                foundUser.setPhoneNumber(user.getPhoneNumber());
+                response.setPayload(userService.saveUser(foundUser));
+                
+                response.setStatus(StatusCode.OK);
+                response.getMessages().add("Update success");
+                return ResponseEntity.status(HttpStatus.OK).body(response);
+            }  
         } catch (Exception e) {
 
             response.setStatus(StatusCode.ERROR);

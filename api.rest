@@ -1,0 +1,32 @@
+### Create Users
+POST http://ec2-3-1-103-169.ap-southeast-1.compute.amazonaws.com:8081/api/users HTTP/1.1
+Content-Type: application/json
+
+{
+    "username":"test2",
+    "fullname":"User Test 2",
+    "email":"test2@mail.com",
+    "phoneNumber":"081234567891"
+}
+
+
+### Get Users
+GET http://ec2-3-1-103-169.ap-southeast-1.compute.amazonaws.com:8081/api/users
+
+### Get User by Id
+GET http://ec2-3-1-103-169.ap-southeast-1.compute.amazonaws.com:8081/api/users/2
+
+### Update user
+PUT http://ec2-3-1-103-169.ap-southeast-1.compute.amazonaws.com:8081/api/users HTTP/1.1
+Content-Type: application/json
+
+{
+    "id": 1,
+    "username":"test1",
+    "fullname":"User Test 1",
+    "email":"test1@mail.com",
+    "phoneNumber":"081234567891"
+}
+
+### Delete user by id
+DELETE http://ec2-3-1-103-169.ap-southeast-1.compute.amazonaws.com:8081/api/users/3
